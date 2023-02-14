@@ -25,15 +25,18 @@
     cal-str-by-elf))
 
 
+(defn part1 [inputs]
+  (->> (read-cals inputs)
+       split-by-elf
+       drop-empties
+       combine-strs-to-ints
+       (apply max)))
 
-(comment
-
+(defn part2 [inputs]
   (->> (read-cals a)
-      split-by-elf
-      drop-empties
-      combine-strs-to-ints
-      (apply max))
-
-
-
-  )
+       split-by-elf
+       drop-empties
+       combine-strs-to-ints
+       sort
+       (take-last 3)
+       (apply +)))
