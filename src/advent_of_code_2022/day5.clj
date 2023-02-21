@@ -38,7 +38,9 @@
   )
 
 (defn process-line [m instruction-line]
-  (let [[n- old new] (re-seq #"\d" instruction-line)]
+  (let [[n- old new] (->> (keep-indexed (fn [i v] (if (odd? i) [v])) (str/split instruction-line #" "))
+                          (reduce (fn [coll next] (conj coll (first next))) []))]
+    (prn n- old new)
     (reduce
       (fn [m' _count]
         (->
