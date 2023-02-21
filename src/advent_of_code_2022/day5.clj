@@ -52,8 +52,20 @@
             (Integer/parseInt old)
             (fn [x] (pop (vec x))))))
       m
-      (range (Integer/parseInt n-)))
-    ))
+      (range (Integer/parseInt n-)))))
+
+(defn process-line-pt2 [m instruction-line]
+  (let [[n- old new] (->> (keep-indexed (fn [i v] (if (odd? i) [v])) (str/split instruction-line #" "))
+                          (reduce (fn [coll next] (conj coll (first next))) []))]
+    (prn n- old new)
+    (->
+      (update m
+              (Integer/parseInt new)
+              (fn [x y] (vec (concat x y)))
+              (take-last (Integer/parseInt n-) (get m (Integer/parseInt old))))
+      (update
+        (Integer/parseInt old)
+        (fn [x] (vec (drop-last (Integer/parseInt n-) x)))))))
 
 ;; map over the string input .
 ;; (keep-indexed f coll)
@@ -61,8 +73,15 @@
 ;; if the value is alpha, assoc the char and the index
 
 
-
-
+(defn part1 [process-fn starting-stack instructions]
+  (->>
+    (reduce process-fn starting-stack instructions)
+    sort
+    (map #(last (last %)))
+    (apply str)
+    ))
+(defn part2 [process-fn starting-stack instructions]
+  )
 
 (defn read-instructions [inputs]
   (let [[setup-raw instrs-raw] (str/split inputs #"\n\n")
@@ -74,13 +93,7 @@
                                                  (update-stack-starter cargo-m)))
                          {}
                          (drop-last setup))]
-    (->>
-      (reduce process-line starting-stack instrs)
-      sort
-      (map #(last (last %)))
-      (apply str)
-      )
-    #_(prn starting-stack)))
+      (part1 process-line-pt2 starting-stack instrs)))
 
 (comment
 
