@@ -1,14 +1,25 @@
-(ns advent-of-code-2022.day6)
+(ns advent-of-code-2022.day6
+  (:require [clojure.java.io :as io]))
 
-;; subs n (+ 4 n)
+(def real-in (-> "2022/day6.txt" io/resource slurp))
 
-(let [n (atom 1)
-      found? (atom nil)]
-  (while (nil? @found?)
-    ;;get next four, check if they're different
-    ;; if they're different, inc n
-    (let [next-four (subs "" @n (+ 4 @n))]
-      (if (all-unique? next-four)
-        (swap! found? (fn [x y] y) (+ 4 @n)))
-      )
-    ))
+(defn all-unique? [substring]
+  (= (count substring) (count (set substring))))
+
+
+(defn part2 [inputs]
+  (let [n (atom 0)
+        found? (atom nil)]
+    (while (nil? @found?)
+      ;;get next four, check if they're different
+      ;; if they're different, inc n
+      (let [next-four (subs inputs @n (+ 14 @n))]
+        (if (all-unique? next-four)
+          (swap! found? (fn [x y] y) (+ 14 @n)))
+        (swap! n inc)))
+    (+ 13 @n)))
+
+(comment
+
+  (part2 real-in)
+  )
